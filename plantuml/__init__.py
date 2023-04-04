@@ -103,16 +103,9 @@ class PlantUML:
         :param str plantuml_text: The plantuml markup to render
         :returns: the raw image data
         """
-        # url = self.get_url(plantuml_text)
-        # try:
-        #     response = httpx.get(url)
-        #     response.raise_for_status()
-        # except httpx.HTTPError as e:
-        #     raise PlantUMLHTTPError(e, "") from e
-        # return response.content
-
+        url = self.get_url(plantuml_text)
         try:
-            response = self.client.get(self.url)
+            response = self.client.get(url)
             response.raise_for_status()
         except httpx.HTTPError as e:
             raise PlantUMLHTTPError(e, "") from e
