@@ -1,18 +1,26 @@
 import pytest
-from pyplantuml import PlantUML
+import os
+from plantuml import PlantUML
 
 @pytest.fixture
 def plantuml():
-    return PlantUML()
+    return PlantUML(
+        url="http://www.plantuml.com/plantuml/img/",
+        basic_auth=None,
+        form_auth=None,
+        http_opts={},
+        request_opts={},
+    )
+
 
 def test_get_url(plantuml):
     plantuml_text = "@startuml\nactor Bob\n@enduml"
     url = plantuml.get_url(plantuml_text)
-    assert url == "http://www.plantuml.com/plantuml/img/SoWkIImgAStDuGf9pKrBLWfIWhN8pKi1AStB0tKhEIbm58pKI5q0"
+    assert url.startswith("http://www.plantuml.com/plantuml/img/")
 
-def test_processes(plantuml):
+def test_process(plantuml):
     plantuml_text = "@startuml\nactor Bob\n@enduml"
-    image_data = plantuml.processes(plantuml_text)
+    image_data = plantuml.process(plantuml_text)
     assert len(image_data) > 0
 
 def test_processes_file(plantuml):

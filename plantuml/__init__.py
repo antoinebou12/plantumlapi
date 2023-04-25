@@ -110,7 +110,7 @@ class PlantUML:
         except httpx.HTTPError as e:
             raise PlantUMLHTTPError(e, "") from e
         return response.content
-    
+
 
     def processes_file(self, filename, outfile=None, errorfile=None, directory=''):
         """Take a filename of a file containing plantuml text and processes
