@@ -12,7 +12,7 @@ from typing import Optional
 from zlib import compress
 import httpx
 
-from plantuml.exceptions import PlantUMLConnectionError, PlantUMLError, PlantUMLHTTPError
+from plantumlapi.exceptions import PlantUMLConnectionError, PlantUMLError, PlantUMLHTTPError
 
 # Example usage
 diagram = """
@@ -127,15 +127,14 @@ class PlantUML:
         :returns: ``True`` if the image write succedded, ``False`` if there was
                     an error written to ``errorfile``.
         """
-        with open(filename, 'r', encoding='utf-8') as f:
-            data = f.read()
+        data = open(filename).read()
         try:
             content = self.processes(data)
         except PlantUMLHTTPError as e:
-            with open(errorfile, 'w') as err:
+            with open(path.join(directory, errorfile), 'w') as err:
                 err.write(e.content)
             return False
-        with open(outfile, 'wb') as out:
+        with open(path.join(directory, outfile), 'wb') as out:
             out.write(content)
         return True
 
@@ -251,12 +250,9 @@ class PlantUML:
         self.auth = auth
         self.out = out
 
-        if not file:
-            print('Please provide a file to generate the image from')
-            return False
-        gen_success = self.processes_file(file, directory=out)
-        print(gen_success)
-        return True
+        return self._error_if_not(
+            file, 'Please provide a file to generate the image from', out
+        )
 
     def generate_image_from_url(self, url: str, out: str = '.'):
         """
@@ -267,9 +263,14 @@ class PlantUML:
         :return: True if the image was generated successfully
         """
 
-        if not url:
-            print('Please provide a url to generate the image from')
+        return self._error_if_not(
+            url, 'Please provide a url to generate the image from', out
+        )
+
+    def _error_if_not(self, arg0, arg1, out):
+        if not arg0:
+            print(arg1)
             return False
-        gen_success = self.processes_file(url, directory=out)
+        gen_success = self.processes_file(arg0, directory=out)
         print(gen_success)
         return True

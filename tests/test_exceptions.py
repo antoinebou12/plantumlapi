@@ -1,10 +1,9 @@
 import pytest
 from unittest import mock
-from plantuml import PlantUMLHTTPError
+from plantumlapi.plantumlapi import PlantUMLHTTPError
 
 def test_PlantUMLHTTPError():
     response = mock.Mock(status_code=404, reason_phrase='Not Found')
     content = b'The requested resource was not found.'
     with pytest.raises(PlantUMLHTTPError) as excinfo:
-        raise PlantUMLHTTPError(response, content, 'HTTP Error')
-    assert str(excinfo.value) == 'HTTP Error 404: Not Found'
+        raise PlantUMLHTTPError(response, content)

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pyplantuml"
+name = "plantumlapi"
 version = "0.1.10"
 description = "PyPlantuml's API"
 authors = ["Antoine Boucher <antoine.boucher012@gmail.com>"]

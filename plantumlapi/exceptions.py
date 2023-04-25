@@ -17,15 +17,14 @@ class PlantUMLConnectionError(PlantUMLError):
     pass
 
 
-class PlantUMLHTTPError(PlantUMLConnectionError):
+class PlantUMLHTTPError(Exception):
     """
     Request to PlantUML server returned HTTP Error.
     """
-
-    def __init__(self, response, content, *args, **kwdargs):
+    def __init__(self, response, content):
         self.response = response
         self.content = content
-        message = f"HTTP Error : {response.request.url} {response}"
-        if not getattr(self, 'message', None):
-            self.message = message
-        super().__init__(message, *args, **kwdargs)
+        self.url = getattr(response, "request", None)
+        self.url = self.url.url if self.url else "unknown URL"
+        self.message = f"HTTP Error : {self.url} {response}"
+        super(PlantUMLHTTPError, self).__init__(self.message)
